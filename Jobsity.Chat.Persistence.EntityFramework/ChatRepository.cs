@@ -1,0 +1,23 @@
+using Jobsity.Chat.Core.Models;
+using Jobsity.Chat.Core.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+namespace Jobsity.Chat.Persistence.EntityFramework;
+
+public class ChatRepository : IChatRepository
+{
+    private readonly ChatContext _context;
+
+    public ChatRepository(ChatContext chatContext) => _context = chatContext;
+
+    public async Task AddAsync(UserChat chat)
+    {
+        await _context.UserChats.AddAsync(chat);
+        await _context.SaveChangesAsync();
+    }
+
+    public Task<UserChat[]> GetLatestAsync(int count)
+    => _context.UserChats.OrderByDescending(u => u.DateCreated)
+                         .Take(count)
+                         .ToArrayAsync();
+}

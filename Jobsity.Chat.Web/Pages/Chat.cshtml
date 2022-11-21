@@ -1,0 +1,35 @@
+﻿@page 
+@model Jobsity.Chat.Web.Pages.ChatModel
+
+@{
+    ViewData["Title"] = "Jobsity Chat";
+    var userId = "Alex";
+}
+
+<!-- Chat -->
+<div class="chat">
+    <div>
+        <h1>Jobsity Chat</h1>
+    </div>
+    <div class="chat-body">
+        <div id="chat-messages">
+            <p>Welcome to Jobsity Chat!</p>
+
+            @{
+                foreach(var chat in Model.Chats)
+                {
+                    <p>[@chat.UserId]: @chat.Message</p>
+                }
+            }
+
+        </div>
+        <div>
+            <input id="new-message" type="text" placeholder="Type a message..." />
+            <button onclick="sendMessage('@userId')">Send</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+}

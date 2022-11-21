@@ -1,0 +1,27 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Jobsity Chat";
+}
+
+<!-- Chat -->
+<div class="chat">
+    <div>
+        <h1>Jobsity Chat</h1>
+    </div>
+    <div class="chat-body">
+        <div id="chat-messages">
+            <p>Welcome to Jobsity Chat!</p>
+        </div>
+
+        <form method="post">
+            <p>Enter your preferred User Name</p>
+            <input asp-for="UserId" required />
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+}
