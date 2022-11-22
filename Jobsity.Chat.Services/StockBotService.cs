@@ -37,7 +37,7 @@ public class StockBotService : IStockBotService
 
         await _bus.PubSub.PublishAsync(request);
 
-        await _bus.PubSub.SubscribeAsync(request.RoomId, async (StockBotRequest request) =>
+        await _bus.PubSub.SubscribeAsync(string.Empty, async (StockBotRequest request) =>
         {
             await _hubContext.Groups.AddToGroupAsync(request.ConnectionId, request.RoomId);
 
