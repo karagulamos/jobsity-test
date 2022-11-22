@@ -22,11 +22,11 @@ const createNewSignalRConnection = () => {
 
 const connection = createNewSignalRConnection();
 
-const sendMessage = (userId) => {
+const sendMessage = (roomId, userId) => {
   const message = document.getElementById("new-message").value;
   if (!message) return;
   connection
-    .invoke("SendNewMessage", userId, message)
+    .invoke("SendNewMessage", roomId, userId, message)
     .catch((err) => console.error(err));
 
   document.getElementById("new-message").value = "";

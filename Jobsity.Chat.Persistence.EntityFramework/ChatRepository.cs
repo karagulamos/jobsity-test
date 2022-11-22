@@ -16,8 +16,9 @@ public class ChatRepository : IChatRepository
         await _context.SaveChangesAsync();
     }
 
-    public Task<UserChat[]> GetLatestAsync(int count)
-    => _context.UserChats.OrderByDescending(u => u.DateCreated)
+    public Task<UserChat[]> GetLatestAsync(Guid roomId, int count)
+    => _context.UserChats.Where(chat => chat.RoomId == roomId)
+                         .OrderByDescending(u => u.DateCreated)
                          .Take(count)
                          .ToArrayAsync();
 }

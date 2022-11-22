@@ -10,7 +10,7 @@ public interface IChatRepository
     /// </summary>
     /// <param name="count"></param>
     /// <returns></returns>
-    Task<UserChat[]> GetLatestAsync(int count = 50);
+    Task<UserChat[]> GetLatestAsync(Guid roomId, int count);
 
     /// <summary>
     /// Adds a new chat to the repository.

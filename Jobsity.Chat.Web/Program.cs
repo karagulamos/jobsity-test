@@ -1,6 +1,9 @@
 using Jobsity.Chat.Core.Persistence;
+using Jobsity.Chat.Core.Services;
 using Jobsity.Chat.Persistence.EntityFramework;
+using Jobsity.Chat.Services;
 using Jobsity.Chat.Web.Hubs;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +11,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
-builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
-builder.Services.AddDbContext<ChatContext>(ServiceLifetime.Scoped);
+builder.Services.AddDbContextPool<ChatContext>(options => options.UseInMemoryDatabase(nameof(ChatContext)));
+
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
+
+builder.Services.AddScoped<IStockBotService, StockBotService>();
+
+builder.Services.AddHttpClient<IStockTickerService, StockTickerService>(p => p.BaseAddress = new Uri("https://stooq.com/q/l/"));
 
 var app = builder.Build();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    await scope.ServiceProvider
+               .GetRequiredService<ChatContext>()
+               .Database
+               .EnsureCreatedAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -34,4 +51,4 @@ app.MapControllers();
 
 app.MapHub<ChatHub>("/chathub");
 
-app.Run();
+await app.RunAsync();

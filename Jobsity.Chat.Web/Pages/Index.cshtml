@@ -15,8 +15,16 @@
         </div>
 
         <form method="post">
-            <p>Enter your preferred User Name</p>
-            <input asp-for="UserId" required />
+            @Html.ValidationSummary()
+
+            <label for="RoomId">Chat room: </label>
+            <select id="RoomId" name="RoomId" asp-items="Model.ChatRooms" required>
+                <option value="">Please select</option>
+            </select>
+
+            <div style="margin: 10px;"></div>
+            <label for="UserId">User name: </label>
+            <input asp-for="UserId" required placeholder="Enter your preferred name..." />
             <button type="submit">Login</button>
         </form>
     </div>
