@@ -1,7 +1,7 @@
 # Jobsity Test
 
 - [Tasks](./TASKS.md)
-- [Preview]("./PREVIEW.md")
+- [Preview](/PREVIEW.md)
 
 ## Setup
 
