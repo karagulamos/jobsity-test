@@ -1,57 +1,67 @@
-
-using System.Text.RegularExpressions;
 using EasyNetQ;
 using Jobsity.Chat.Core.Common;
 using Jobsity.Chat.Core.Models;
 using Jobsity.Chat.Core.Models.Dtos;
 using Jobsity.Chat.Core.Services;
+using Jobsity.Chat.Services.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace Jobsity.Chat.Services;
 
 public class StockBotService : IStockBotService
 {
-    private const string BotCommandPattern = @"\/stock\s*=\s*([\w.]+)";
-
-    private readonly static Regex BotCommandRegex;
+    private readonly ILogger<ChatHub> _logger;
     private readonly IBus _bus;
     private readonly IStockTickerService _stockTickerService;
+    private readonly IHubContext<ChatHub> _hubContext;
 
-    static StockBotService()
+    public StockBotService(ILogger<ChatHub> logger, IBus bus, IStockTickerService stockTickerService, IHubContext<ChatHub> hubContext)
     {
-        BotCommandRegex = new Regex(BotCommandPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-    }
-
-    public StockBotService(IBus bus, IStockTickerService stockTickerService)
-    {
+        _logger = logger;
         _bus = bus;
         _stockTickerService = stockTickerService;
+        _hubContext = hubContext;
     }
 
-    public async Task<bool> TryEnqueueAsync(string message, string correlationId)
-    {
-        var match = BotCommandRegex.Match(message);
+    public bool FoundValidCommand(string message) => message.Replace(" ", "").StartsWith("/stock=");
 
-        if (!match.Success || match.Groups.Count < 2)
+    public async Task<bool> TryEnqueueAsync(string message, string roomId, string connectionId)
+    {
+        var tokens = message.Split('=', 2, StringSplitOptions.RemoveEmptyEntries);
+
+        if (tokens.Length != 2)
             return false;
 
-        var request = new StockBotRequest(correlationId, match.Groups[1].Value);
+        var request = new StockBotRequest(tokens[1].Trim(), roomId, connectionId);
 
         await _bus.PubSub.PublishAsync(request);
 
-        await _bus.PubSub.SubscribeAsync(request.CorrelationId, async (StockBotRequest request) =>
+        await _bus.PubSub.SubscribeAsync(request.RoomId, async (StockBotRequest request) =>
         {
-            var stockPrice = await _stockTickerService.GetStockPriceAsync(request.StockCode);
+            await _hubContext.Groups.AddToGroupAsync(request.ConnectionId, request.RoomId);
 
-            if (stockPrice == default)
-                return;
+            try
+            {
+                var stockPrice = await _stockTickerService.GetStockPriceAsync(request.StockCode);
 
-            var userChat = new UserChatDto(Constants.StockBotId, $"{stockPrice.Code} quote is ${stockPrice.Price} per share.", DateTime.Now);
+                if (stockPrice == default)
+                    return;
 
-            // TODO: Send message to the user using SignalR and their ConnectionId (i.e. CorrelationId)
+                var userChat = new UserChatDto(Constants.StockBotId, $"{stockPrice.Code} quote is ${stockPrice.Price} per share.", DateTime.Now);
+
+
+                await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveNewMessage", userChat);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing stock bot request");
+
+                var userChat = new UserChatDto(Constants.StockBotId, Constants.BotUnableToProcessRequest, DateTime.Now);
+                await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveNewMessage", userChat);
+            }
         });
 
         return true;
     }
-
-    public bool FoundValidCommand(string message) => message.Replace(" ", "").StartsWith("/stock=");
 }

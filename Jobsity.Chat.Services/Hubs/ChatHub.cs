@@ -4,8 +4,9 @@ using Jobsity.Chat.Core.Models.Dtos;
 using Jobsity.Chat.Core.Persistence;
 using Jobsity.Chat.Core.Services;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
-namespace Jobsity.Chat.Web.Hubs;
+namespace Jobsity.Chat.Services.Hubs;
 
 public class ChatHub : Hub
 {
@@ -28,13 +29,16 @@ public class ChatHub : Hub
     {
         _logger.LogInformation($"Message from {userId} - {message}");
 
+        await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
+
         if (_stockBot.FoundValidCommand(message))
         {
             _logger.LogInformation($"StockBot command found in message from {userId} - {message}");
 
-            var response = await _stockBot.TryEnqueueAsync(message, roomId.ToString()) ? BotProcessing : BotBadCommand;
+            var response = await _stockBot.TryEnqueueAsync(message, roomId.ToString(), Context.ConnectionId) ? BotProcessing : BotBadCommand;
 
             var botResponse = new UserChatDto(Constants.StockBotId, response, DateTime.Now);
+
             await Clients.Caller.SendAsync(ReceiveNewMessage, botResponse);
             return;
         }
@@ -42,8 +46,6 @@ public class ChatHub : Hub
         var newChat = new UserChat(userId, message, roomId);
 
         await _chats.AddAsync(newChat);
-
-        await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
         await Clients.Group(roomId.ToString()).SendAsync(ReceiveNewMessage, (UserChatDto)newChat);
     }
 }

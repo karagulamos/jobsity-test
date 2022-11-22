@@ -23,7 +23,7 @@ public class StockTickerService : IStockTickerService
         // Symbol, Date, Time, Open, High, Low, Close, Volume
         // MSFT, 2021-03-26, 16:00:00, 237.0000, 237.0000, 236.0000, 236.0000, 0
 
-        var lines = content.Split("\r\n");
+        var lines = content.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
 
         if (lines.Length < 2)
             throw new Exception("Invalid stock report format");

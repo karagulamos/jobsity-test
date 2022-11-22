@@ -2,12 +2,14 @@ namespace Jobsity.Chat.Core.Models;
 
 public class StockBotRequest
 {
-    public StockBotRequest(string correlationId, string stockCode)
+    public StockBotRequest(string stockCode, string roomId, string connectionId)
     {
-        CorrelationId = correlationId;
         StockCode = stockCode;
+        RoomId = roomId;
+        ConnectionId = connectionId;
     }
 
-    public string CorrelationId { get; }
     public string StockCode { get; }
+    public string RoomId { get; }
+    public string ConnectionId { get; }
 }

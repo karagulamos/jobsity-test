@@ -8,7 +8,7 @@
 - [x] Create a decoupled bot that will call an API using the stock_code as a parameter
 (<https://stooq.com/q/l/?s=aapl.us&f=sd2t2ohlcv&h&e=csv>, here aapl.us is the
 stock_code)
-- [ ] The bot should parse the received CSV file and then it should send a message back into
+- [x] The bot should parse the received CSV file and then it should send a message back into
 the chatroom using a message broker like RabbitMQ. The message will be a stock quote
 using the following format: “APPL.US quote is $93.42 per share”. The post owner will be
 the bot.

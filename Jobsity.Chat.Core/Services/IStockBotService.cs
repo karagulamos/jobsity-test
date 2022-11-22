@@ -10,10 +10,10 @@ public interface IStockBotService
     public bool FoundValidCommand(string message);
 
     /// <summary>
-    /// Processes the bot command message.
+    /// Tries to enqueue a message to the stock bot for processing.
     /// </summary>
-    /// <param name="correlationId"></param>
     /// <param name="message"></param>
-    /// <returns></returns>
-    public Task<bool> TryEnqueueAsync(string message, string correlationId);
+    /// <param name="roomId"></param>
+    /// <param name="connectionId"></param>
+    public Task<bool> TryEnqueueAsync(string message, string roomId, string connectionId);
 }

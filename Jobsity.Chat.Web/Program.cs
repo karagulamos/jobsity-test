@@ -4,7 +4,7 @@ using Jobsity.Chat.Core.Persistence;
 using Jobsity.Chat.Core.Services;
 using Jobsity.Chat.Persistence.EntityFramework;
 using Jobsity.Chat.Services;
-using Jobsity.Chat.Web.Hubs;
+using Jobsity.Chat.Services.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +20,6 @@ builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 
 builder.Services.AddScoped<IStockBotService, StockBotService>();
-
 builder.Services.AddHttpClient<IStockTickerService, StockTickerService>(p => p.BaseAddress = new Uri("https://stooq.com/q/l/"));
 
 builder.Services.AddSingleton<IBus>(RabbitHutch.CreateBus("host=localhost"));
