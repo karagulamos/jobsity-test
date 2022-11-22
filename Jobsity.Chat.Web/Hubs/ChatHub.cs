@@ -28,9 +28,11 @@ public class ChatHub : Hub
     {
         _logger.LogInformation($"Message from {userId} - {message}");
 
-        if (_stockBot.IsBotCommand(message))
+        if (_stockBot.FoundValidCommand(message))
         {
-            var response = await _stockBot.Enqueue(roomId.ToString(), message) ? BotProcessing : BotBadCommand;
+            _logger.LogInformation($"StockBot command found in message from {userId} - {message}");
+
+            var response = await _stockBot.TryEnqueueAsync(message, roomId.ToString()) ? BotProcessing : BotBadCommand;
 
             var botResponse = new UserChatDto(Constants.StockBotId, response, DateTime.Now);
             await Clients.Caller.SendAsync(ReceiveNewMessage, botResponse);

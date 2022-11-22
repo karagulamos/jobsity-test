@@ -27,7 +27,7 @@ public class StockBotService : IStockBotService
         _stockTickerService = stockTickerService;
     }
 
-    public async Task<bool> Enqueue(string correlationId, string message)
+    public async Task<bool> TryEnqueueAsync(string message, string correlationId)
     {
         var match = BotCommandRegex.Match(message);
 
@@ -53,5 +53,5 @@ public class StockBotService : IStockBotService
         return true;
     }
 
-    public bool IsBotCommand(string message) => message.Replace(" ", "").StartsWith("/stock=");
+    public bool FoundValidCommand(string message) => message.Replace(" ", "").StartsWith("/stock=");
 }

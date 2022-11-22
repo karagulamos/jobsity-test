@@ -1,4 +1,5 @@
 using EasyNetQ;
+using Jobsity.Chat.Core.Common;
 using Jobsity.Chat.Core.Persistence;
 using Jobsity.Chat.Core.Services;
 using Jobsity.Chat.Persistence.EntityFramework;
@@ -52,6 +53,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 
-app.MapHub<ChatHub>("/chathub");
+app.MapHub<ChatHub>(Constants.ChatHubPath);
 
 await app.RunAsync();
