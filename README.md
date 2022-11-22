@@ -5,9 +5,14 @@
 
 ## Setup
 
-Requires .NET 7 or higher.
+Requires Docker, RabbitMQ, .NET 7 or higher.
 
 ```bash
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.11-management
+```
+
+```bash
+$dotnet restore
 $dotnet watch run --project Jobsity.Chat.Web  
 ```
 
@@ -24,3 +29,4 @@ $dotnet watch run --project Jobsity.Chat.Web
 | :-------------------- | :-------------------------------- |
 | `SignalR`             | For realtime comm between clients |
 | `EF Core`             | Persistence and data retrieval    |
+| `EasyNetQ`            | For message queueing              |

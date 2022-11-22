@@ -10,6 +10,7 @@
     <None Remove="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="EasyNetQ" Version="7.3.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.0-preview.6.22330.7" />
   </ItemGroup>
   <PropertyGroup>

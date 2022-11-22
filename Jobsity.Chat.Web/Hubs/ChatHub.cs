@@ -1,3 +1,4 @@
+using Jobsity.Chat.Core.Common;
 using Jobsity.Chat.Core.Models;
 using Jobsity.Chat.Core.Persistence;
 using Jobsity.Chat.Core.Services;
@@ -8,7 +9,6 @@ namespace Jobsity.Chat.Web.Hubs;
 public class ChatHub : Hub
 {
     private const string ReceiveNewMessage = nameof(ReceiveNewMessage);
-    private const string BotId = "StockBot";
     private const string BotBadCommand = "Unable to process your request. Please check the command and retry.";
     private const string BotProcessing = "Processing your request. Please wait...";
 
@@ -31,7 +31,7 @@ public class ChatHub : Hub
         {
             var response = await _stockBot.Enqueue(roomId.ToString(), message) ? BotProcessing : BotBadCommand;
 
-            var botResponse = new UserChatDto(BotId, response, DateTime.Now);
+            var botResponse = new UserChatDto(Constants.StockBotId, response, DateTime.Now);
             await Clients.Caller.SendAsync(ReceiveNewMessage, botResponse);
             return;
         }
