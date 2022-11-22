@@ -1,5 +1,4 @@
 using EasyNetQ;
-using Jobsity.Chat.Core.Common;
 using Jobsity.Chat.Core.Persistence;
 using Jobsity.Chat.Core.Services;
 using Jobsity.Chat.Persistence.EntityFramework;
