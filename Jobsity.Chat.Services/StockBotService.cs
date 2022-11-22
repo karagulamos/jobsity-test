@@ -50,7 +50,6 @@ public class StockBotService : IStockBotService
 
                 var userChat = new UserChatDto(Constants.StockBotId, $"{stockPrice.Code} quote is ${stockPrice.Price} per share.", DateTime.Now);
 
-
                 await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveNewMessage", userChat);
             }
             catch (Exception ex)
