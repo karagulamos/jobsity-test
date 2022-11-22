@@ -1,5 +1,6 @@
 using Jobsity.Chat.Core.Common;
 using Jobsity.Chat.Core.Models;
+using Jobsity.Chat.Core.Models.Dtos;
 using Jobsity.Chat.Core.Persistence;
 using Jobsity.Chat.Core.Services;
 using Microsoft.AspNetCore.SignalR;

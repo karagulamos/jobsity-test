@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using EasyNetQ;
 using Jobsity.Chat.Core.Common;
 using Jobsity.Chat.Core.Models;
+using Jobsity.Chat.Core.Models.Dtos;
 using Jobsity.Chat.Core.Services;
 
 namespace Jobsity.Chat.Services;
@@ -41,10 +42,10 @@ public class StockBotService : IStockBotService
         {
             var stockPrice = await _stockTickerService.GetStockPriceAsync(request.StockCode);
 
-            if (stockPrice == null)
+            if (stockPrice == default)
                 return;
 
-            var userChat = new UserChat(Constants.StockBotId, $"{stockPrice.Code} quote is ${stockPrice.Price} per share.", Guid.Parse(request.CorrelationId));
+            var userChat = new UserChatDto(Constants.StockBotId, $"{stockPrice.Code} quote is ${stockPrice.Price} per share.", DateTime.Now);
 
             // TODO: Send message to the user using SignalR and their ConnectionId (i.e. CorrelationId)
         });

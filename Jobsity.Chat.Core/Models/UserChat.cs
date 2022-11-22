@@ -16,5 +16,5 @@ public class UserChat
     public string Message { get; }
     public DateTime DateCreated { get; }
 
-    public ChatRoom ChatRoom { get; set; }
+    public ChatRoom ChatRoom { get; set; } = null!;
 }

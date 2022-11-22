@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Jobsity.Chat.Core.Models;
+﻿using Jobsity.Chat.Core.Models;
 using Jobsity.Chat.Core.Services;
 
 namespace Jobsity.Chat.Services;

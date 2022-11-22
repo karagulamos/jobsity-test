@@ -1,6 +1,4 @@
-using Jobsity.Chat.Core.Models;
-
-namespace Jobsity.Chat.Web.Hubs;
+namespace Jobsity.Chat.Core.Models.Dtos;
 
 public class UserChatDto
 {
