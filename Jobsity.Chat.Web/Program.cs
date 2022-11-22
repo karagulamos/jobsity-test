@@ -52,6 +52,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 
-app.MapHub<ChatHub>(Constants.ChatHubPath);
+app.MapHub<ChatHub>("/chatHub");
 
 await app.RunAsync();

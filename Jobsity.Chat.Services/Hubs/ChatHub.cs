@@ -1,4 +1,3 @@
-using Jobsity.Chat.Core.Common;
 using Jobsity.Chat.Core.Models;
 using Jobsity.Chat.Core.Models.Dtos;
 using Jobsity.Chat.Core.Persistence;
@@ -6,14 +5,12 @@ using Jobsity.Chat.Core.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
+using static Jobsity.Chat.Core.Common.Constants;
+
 namespace Jobsity.Chat.Services.Hubs;
 
 public class ChatHub : Hub
 {
-    private const string ReceiveNewMessage = nameof(ReceiveNewMessage);
-    private const string BotBadCommand = "Unable to process your request. Please check the command and retry.";
-    private const string BotProcessing = "Processing your request. Please wait...";
-
     private readonly ILogger<ChatHub> _logger;
     private readonly IChatRepository _chats;
     private readonly IStockBotService _stockBot;
@@ -35,17 +32,20 @@ public class ChatHub : Hub
         {
             _logger.LogInformation($"StockBot command found in message from {userId} - {message}");
 
-            var response = await _stockBot.TryEnqueueAsync(message, roomId.ToString(), Context.ConnectionId) ? BotProcessing : BotBadCommand;
+            var response = await _stockBot.TryEnqueueAsync(message, roomId.ToString(), Context.ConnectionId)
+                         ? BotProcessingRequest : BotUnableToProcessRequest;
 
-            var botResponse = new UserChatDto(Constants.StockBotId, response, DateTime.Now);
+            var botResponse = new UserChatDto(StockBotId, response, DateTime.Now);
 
-            await Clients.Caller.SendAsync(ReceiveNewMessage, botResponse);
+            await Clients.Caller.SendAsync(ClientReceiveNewMessage, botResponse);
+
             return;
         }
 
         var newChat = new UserChat(userId, message, roomId);
 
         await _chats.AddAsync(newChat);
-        await Clients.Group(roomId.ToString()).SendAsync(ReceiveNewMessage, (UserChatDto)newChat);
+
+        await Clients.Group(roomId.ToString()).SendAsync(ClientReceiveNewMessage, (UserChatDto)newChat);
     }
 }
