@@ -8,10 +8,7 @@ public class DistributedMemoryCache : ICache
 {
     private readonly IDistributedCache _cache;
 
-    public DistributedMemoryCache(IDistributedCache cache)
-    {
-        _cache = cache;
-    }
+    public DistributedMemoryCache(IDistributedCache cache) => _cache = cache;
 
     public async Task<T> GetAsync<T>(string key)
     {
@@ -20,7 +17,7 @@ public class DistributedMemoryCache : ICache
         if (string.IsNullOrEmpty(value))
             return default!;
 
-        return JsonSerializer.Deserialize<T>(value) ?? default!;
+        return JsonSerializer.Deserialize<T>(value)!;
     }
 
     public async Task SetAsync<T>(string key, T value, TimeSpan? expiry = default)

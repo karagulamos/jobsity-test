@@ -5,9 +5,9 @@ namespace Jobsity.Chat.Core.Services;
 public interface IStockTickerService
 {
     /// <summary>
-    /// Gets the latest stock prices for the specified stock.
+    /// Gets the latest quote for the specified stock code.
     /// </summary>
     /// <param name="stockCode"></param>
     /// <returns></returns>
-    Task<StockPrice?> GetStockPriceAsync(string stockCode);
+    Task<StockQuote?> GetQuoteAsync(string stockCode);
 }

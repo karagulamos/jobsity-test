@@ -1,6 +1,6 @@
 namespace Jobsity.Chat.Core.Services;
 
-public interface IStockBotService
+public interface IStockQuoteBotService
 {
     /// <summary>
     /// Checks if the message is a bot command.

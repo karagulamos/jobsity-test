@@ -9,8 +9,8 @@ public class ChatContext : DbContext
     {
     }
 
-    public DbSet<UserChat> UserChats { get; set; } = null!;
-    public DbSet<ChatRoom> ChatRooms { get; set; } = null!;
+    public DbSet<UserChat> UserChats { get; set; } = default!;
+    public DbSet<ChatRoom> ChatRooms { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -19,17 +19,17 @@ public class StockTickerService : IStockTickerService
         _options = options.Value;
     }
 
-    public async Task<StockPrice?> GetStockPriceAsync(string stockCode)
+    public async Task<StockQuote?> GetQuoteAsync(string stockCode)
     {
-        var stockPrice = await _cache.GetAsync<StockPrice>(stockCode);
+        var stockQuote = await _cache.GetAsync<StockQuote>(stockCode);
 
-        if (stockPrice != default)
-            return stockPrice;
+        if (stockQuote != default)
+            return stockQuote;
 
         var response = await _client.GetAsync($"?s={stockCode}&f=sd2t2ohlcv&h&e=csv");
 
         if (!response.IsSuccessStatusCode)
-            throw new Exception($"Error getting stock price: {response.StatusCode}"); // IMPROV: Custom exception
+            throw new Exception($"Error getting stock quote: {response.StatusCode}"); // IMPROV: Custom exception
 
         var content = await response.Content.ReadAsStringAsync();
 
@@ -50,10 +50,10 @@ public class StockTickerService : IStockTickerService
             || !decimal.TryParse(values[6], out var price))
             throw new Exception("Error parsing stock price"); // IMPROV: Custom exception
 
-        stockPrice = new StockPrice(stockCode, price);
+        stockQuote = new StockQuote(stockCode, price);
 
-        await _cache.SetAsync(stockCode, stockPrice, _options.PriceCacheDuration);
+        await _cache.SetAsync(stockCode, stockQuote, _options.StockQuoteCacheDuration);
 
-        return stockPrice;
+        return stockQuote;
     }
 }

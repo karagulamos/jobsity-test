@@ -27,7 +27,7 @@ builder.Services.AddDbContextPool<ChatContext>(options => options.UseInMemoryDat
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 
-builder.Services.AddScoped<IStockBotService, StockBotService>();
+builder.Services.AddScoped<IStockQuoteBotService, StockQuoteBotService>();
 builder.Services.AddHttpClient<IStockTickerService, StockTickerService>(p => p.BaseAddress = new Uri("https://stooq.com/q/l/"));
 
 builder.Services.AddSingleton<IBus>(RabbitHutch.CreateBus("host=localhost"));

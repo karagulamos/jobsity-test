@@ -13,9 +13,9 @@ public class ChatHub : Hub<IChatHub>
 {
     private readonly ILogger<ChatHub> _logger;
     private readonly IChatRepository _chats;
-    private readonly IStockBotService _stockBot;
+    private readonly IStockQuoteBotService _stockBot;
 
-    public ChatHub(ILogger<ChatHub> logger, IChatRepository chats, IStockBotService stockBot)
+    public ChatHub(ILogger<ChatHub> logger, IChatRepository chats, IStockQuoteBotService stockBot)
     {
         _logger = logger;
         _chats = chats;
