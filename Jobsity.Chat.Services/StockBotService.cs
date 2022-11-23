@@ -7,6 +7,8 @@ using Jobsity.Chat.Services.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
+using static Jobsity.Chat.Core.Common.Constants;
+
 namespace Jobsity.Chat.Services;
 
 public class StockBotService : IStockBotService
@@ -48,16 +50,16 @@ public class StockBotService : IStockBotService
                 if (stockPrice == default)
                     return;
 
-                var userChat = new UserChatDto(Constants.StockBotId, $"{stockPrice.Code} quote is ${stockPrice.Price} per share.", DateTime.Now);
+                var userChat = new UserChatDto(Constants.StockBotId, $"{stockPrice.Code.ToUpper()} quote is ${stockPrice.Price} per share.", DateTime.Now);
 
-                await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveNewMessage", userChat);
+                await _hubContext.Clients.Client(request.ConnectionId).SendAsync(ClientReceiveNewMessage, userChat);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error processing stock bot request");
 
                 var userChat = new UserChatDto(Constants.StockBotId, Constants.BotUnableToProcessRequest, DateTime.Now);
-                await _hubContext.Clients.Client(request.ConnectionId).SendAsync("ReceiveNewMessage", userChat);
+                await _hubContext.Clients.Client(request.ConnectionId).SendAsync(ClientReceiveNewMessage, userChat);
             }
         });
 

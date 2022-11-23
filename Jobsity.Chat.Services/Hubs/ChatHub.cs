@@ -32,17 +32,23 @@ public class ChatHub : Hub
         {
             _logger.LogInformation($"StockBot command found in message from {userId} - {message}");
 
-            var response = await _stockBot.TryEnqueueAsync(message, roomId.ToString(), Context.ConnectionId)
-                         ? BotProcessingRequest : BotUnableToProcessRequest;
+            await Clients.Caller.SendAsync(
+                ClientReceiveNewMessage,
+                new UserChatDto(StockBotId, BotProcessingRequest, DateTime.Now)
+            );
 
-            var botResponse = new UserChatDto(StockBotId, response, DateTime.Now);
-
-            await Clients.Caller.SendAsync(ClientReceiveNewMessage, botResponse);
+            if (!await _stockBot.TryEnqueueAsync(message, roomId.ToString(), Context.ConnectionId))
+            {
+                await Clients.Caller.SendAsync(
+                    ClientReceiveNewMessage,
+                    new UserChatDto(StockBotId, BotUnableToProcessRequest, DateTime.Now)
+                );
+            }
 
             return;
         }
 
-        var newChat = new UserChat(userId, message, roomId);
+        var newChat = new UserChat(userId, message, roomId, DateTime.Now);
 
         await _chats.AddAsync(newChat);
 

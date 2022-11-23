@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Jobsity.Chat.Core\Jobsity.Chat.Core.csproj" />
     <ProjectReference Include="..\Jobsity.Chat.Persistence.EntityFramework\Jobsity.Chat.Persistence.EntityFramework.csproj" />
     <ProjectReference Include="..\Jobsity.Chat.Services\Jobsity.Chat.Services.csproj" />
+    <ProjectReference Include="..\Jobsity.Chat.Persistence.DistributedCache\Jobsity.Chat.Persistence.DistributedCache.csproj" />
   </ItemGroup>
 
   <ItemGroup>

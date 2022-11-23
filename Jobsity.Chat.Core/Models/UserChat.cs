@@ -1,20 +1,7 @@
 namespace Jobsity.Chat.Core.Models;
 
-public class UserChat
+public record UserChat(string UserId, string Message, Guid RoomId, DateTime DateCreated)
 {
-    public UserChat(string userId, string message, Guid roomId)
-    {
-        UserId = userId;
-        Message = message;
-        RoomId = roomId;
-        DateCreated = DateTime.UtcNow;
-    }
-
     public Guid Id { get; }
-    public Guid RoomId { get; }
-    public string UserId { get; }
-    public string Message { get; }
-    public DateTime DateCreated { get; }
-
-    public ChatRoom ChatRoom { get; set; } = null!;
+    public ChatRoom ChatRoom { get; } = null!;
 }

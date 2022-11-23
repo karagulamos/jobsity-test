@@ -1,6 +1,8 @@
 using EasyNetQ;
+using Jobsity.Chat.Core.Models.Options;
 using Jobsity.Chat.Core.Persistence;
 using Jobsity.Chat.Core.Services;
+using Jobsity.Chat.Persistence.DistributedCache;
 using Jobsity.Chat.Persistence.EntityFramework;
 using Jobsity.Chat.Services;
 using Jobsity.Chat.Services.Hubs;
@@ -12,6 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSingleton<ICache, DistributedMemoryCache>();
+
+builder.Services.AddOptions<StockTickerOptions>()
+    .Bind(builder.Configuration.GetSection(nameof(StockTickerOptions)))
+    .ValidateDataAnnotations();
 
 builder.Services.AddDbContextPool<ChatContext>(options => options.UseInMemoryDatabase(nameof(ChatContext)));
 
@@ -21,7 +30,9 @@ builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 builder.Services.AddScoped<IStockBotService, StockBotService>();
 builder.Services.AddHttpClient<IStockTickerService, StockTickerService>(p => p.BaseAddress = new Uri("https://stooq.com/q/l/"));
 
-builder.Services.AddSingleton<IBus>(RabbitHutch.CreateBus("host=localhost"));
+builder.Services.AddSingleton<IBus>(
+    RabbitHutch.CreateBus(builder.Configuration.GetConnectionString("RabbitMQ"))
+);
 
 var app = builder.Build();
 
