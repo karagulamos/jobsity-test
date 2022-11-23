@@ -14,6 +14,6 @@ public interface IStockQuoteBotService
     /// </summary>
     /// <param name="message"></param>
     /// <param name="roomId"></param>
-    /// <param name="connectionId"></param>
-    public Task<bool> TryEnqueueAsync(string message, string roomId, string connectionId);
+    /// <param name="correlationId"></param>
+    public Task<bool> TryEnqueueAsync(string message, string correlationId);
 }

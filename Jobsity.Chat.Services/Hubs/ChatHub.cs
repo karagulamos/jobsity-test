@@ -34,7 +34,7 @@ public class ChatHub : Hub<IChatHub>
 
             await Clients.Caller.ReceiveNewMessage(new UserChatDto(StockBotId, BotProcessingRequest, DateTime.Now));
 
-            if (!await _stockBot.TryEnqueueAsync(message, roomId.ToString(), Context.ConnectionId))
+            if (!await _stockBot.TryEnqueueAsync(message, Context.ConnectionId))
             {
                 await Clients.Caller.ReceiveNewMessage(new UserChatDto(StockBotId, BotUnableToProcessRequest, DateTime.Now));
             }
