@@ -30,9 +30,7 @@ builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 builder.Services.AddScoped<IStockBotService, StockBotService>();
 builder.Services.AddHttpClient<IStockTickerService, StockTickerService>(p => p.BaseAddress = new Uri("https://stooq.com/q/l/"));
 
-builder.Services.AddSingleton<IBus>(
-    RabbitHutch.CreateBus(builder.Configuration.GetConnectionString("RabbitMQ"))
-);
+builder.Services.AddSingleton<IBus>(RabbitHutch.CreateBus("host=localhost"));
 
 var app = builder.Build();
 
