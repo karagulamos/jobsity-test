@@ -11,4 +11,4 @@
 
 ## Bot
 
-![Stocks Bot](https://user-images.githubusercontent.com/16248072/203415937-49966bdc-04c6-4cb0-9630-5927e596056a.png)
+![Stocks Bot](https://user-images.githubusercontent.com/16248072/203503006-fc37f7fe-4c48-47f7-88cb-79e012452d82.png)
