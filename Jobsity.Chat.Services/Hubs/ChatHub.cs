@@ -9,7 +9,7 @@ using static Jobsity.Chat.Core.Common.Constants;
 
 namespace Jobsity.Chat.Services.Hubs;
 
-public class ChatHub : Hub
+public class ChatHub : Hub<IChatHub>
 {
     private readonly ILogger<ChatHub> _logger;
     private readonly IChatRepository _chats;
@@ -32,17 +32,11 @@ public class ChatHub : Hub
         {
             _logger.LogInformation($"StockBot command found in message from {userId} - {message}");
 
-            await Clients.Caller.SendAsync(
-                ClientReceiveNewMessage,
-                new UserChatDto(StockBotId, BotProcessingRequest, DateTime.Now)
-            );
+            await Clients.Caller.ReceiveNewMessage(new UserChatDto(StockBotId, BotProcessingRequest, DateTime.Now));
 
             if (!await _stockBot.TryEnqueueAsync(message, roomId.ToString(), Context.ConnectionId))
             {
-                await Clients.Caller.SendAsync(
-                    ClientReceiveNewMessage,
-                    new UserChatDto(StockBotId, BotUnableToProcessRequest, DateTime.Now)
-                );
+                await Clients.Caller.ReceiveNewMessage(new UserChatDto(StockBotId, BotUnableToProcessRequest, DateTime.Now));
             }
 
             return;
@@ -52,6 +46,6 @@ public class ChatHub : Hub
 
         await _chats.AddAsync(newChat);
 
-        await Clients.Group(roomId.ToString()).SendAsync(ClientReceiveNewMessage, (UserChatDto)newChat);
+        await Clients.Group(roomId.ToString()).ReceiveNewMessage((UserChatDto)newChat);
     }
 }

@@ -7,8 +7,6 @@ using Jobsity.Chat.Services.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
-using static Jobsity.Chat.Core.Common.Constants;
-
 namespace Jobsity.Chat.Services;
 
 public class StockBotService : IStockBotService
@@ -16,9 +14,9 @@ public class StockBotService : IStockBotService
     private readonly ILogger<ChatHub> _logger;
     private readonly IBus _bus;
     private readonly IStockTickerService _stockTickerService;
-    private readonly IHubContext<ChatHub> _hubContext;
+    private readonly IHubContext<ChatHub, IChatHub> _hubContext;
 
-    public StockBotService(ILogger<ChatHub> logger, IBus bus, IStockTickerService stockTickerService, IHubContext<ChatHub> hubContext)
+    public StockBotService(ILogger<ChatHub> logger, IBus bus, IStockTickerService stockTickerService, IHubContext<ChatHub, IChatHub> hubContext)
     {
         _logger = logger;
         _bus = bus;
@@ -51,15 +49,14 @@ public class StockBotService : IStockBotService
                     return;
 
                 var userChat = new UserChatDto(Constants.StockBotId, $"{stockPrice.Code.ToUpper()} quote is ${stockPrice.Price} per share.", DateTime.Now);
-
-                await _hubContext.Clients.Client(request.ConnectionId).SendAsync(ClientReceiveNewMessage, userChat);
+                await _hubContext.Clients.Client(request.ConnectionId).ReceiveNewMessage(userChat);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error processing stock bot request");
 
                 var userChat = new UserChatDto(Constants.StockBotId, Constants.BotUnableToProcessRequest, DateTime.Now);
-                await _hubContext.Clients.Client(request.ConnectionId).SendAsync(ClientReceiveNewMessage, userChat);
+                await _hubContext.Clients.Client(request.ConnectionId).ReceiveNewMessage(userChat);
             }
         });
 
