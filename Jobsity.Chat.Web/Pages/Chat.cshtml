@@ -27,5 +27,6 @@
 </div>
 
 @section Scripts {
+<script> window.ChatSession = window.ChatSession || { roomId: '@Model.RoomId' }; </script>
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 }

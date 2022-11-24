@@ -26,8 +26,6 @@ public class ChatHub : Hub<IChatHub>
     {
         _logger.LogInformation($"Message from {userId} - {message}");
 
-        await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
-
         if (_stockBot.FoundValidCommand(message))
         {
             _logger.LogInformation($"StockBot command found in message from {userId} - {message}");
@@ -55,5 +53,11 @@ public class ChatHub : Hub<IChatHub>
         await Clients.Group(roomId.ToString()).ReceiveNewMessage((UserChatDto)newChat);
 
         _logger.LogInformation($"Message from {userId} - {message} published");
+    }
+
+    public async Task JoinRoom(Guid roomId)
+    {
+        _logger.LogInformation($"User {Context.ConnectionId} joined room {roomId}");
+        await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
     }
 }
