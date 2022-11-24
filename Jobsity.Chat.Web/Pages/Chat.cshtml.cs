@@ -22,7 +22,7 @@ namespace Jobsity.Chat.Web.Pages
             Chats = Array.Empty<UserChat>();
         }
 
-        public IList<UserChat> Chats { get; set; }
+        public UserChat[] Chats { get; set; }
 
         [BindProperty(SupportsGet = true, Name = "roomId")]
         public Guid RoomId { get; set; }
@@ -45,8 +45,7 @@ namespace Jobsity.Chat.Web.Pages
 
                 ChatRoomName = chatRoom.Name;
 
-                var latestChats = await _chats.GetLatestAsync(RoomId, DefaultChatCount);
-                Chats = latestChats.OrderBy(c => c.DateCreated).ToList();
+                Chats = await _chats.GetLatestAsync(RoomId, DefaultChatCount);
             }
             catch (Exception ex)
             {
