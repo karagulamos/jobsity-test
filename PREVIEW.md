@@ -12,3 +12,7 @@
 ## Bot
 
 ![Stocks Bot](https://user-images.githubusercontent.com/16248072/203503006-fc37f7fe-4c48-47f7-88cb-79e012452d82.png)
+
+## Connection State and Offline Chats
+
+![Connection State and Offline Chats](https://user-images.githubusercontent.com/16248072/203721406-9bf7192f-91e3-49c1-9513-6f8943dab357.png)
