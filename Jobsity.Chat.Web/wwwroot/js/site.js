@@ -51,11 +51,11 @@ connection.onreconnecting((error) => {
   manageConnectionState("<em>Connection lost. Reconnecting...</em>", true);
 });
 
-connection.onreconnected((connectionId) => {
+connection.onreconnected(async (connectionId) => {
   console.assert(connection.state === signalR.HubConnectionState.Connected);
   console.log(`Connection reestablished with connectionId "${connectionId}".`);
 
-  joinRoom();
+  await joinRoom();
 });
 
 async function startConnection() {
@@ -64,7 +64,7 @@ async function startConnection() {
     console.assert(connection.state === signalR.HubConnectionState.Connected);
     console.log("Connected to chat server.");
 
-    joinRoom();
+    await joinRoom();
   } catch (err) {
     console.assert(
       connection.state === signalR.HubConnectionState.Disconnected
