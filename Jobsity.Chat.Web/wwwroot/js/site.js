@@ -17,18 +17,31 @@ connection.on("ReceiveNewMessage", (newChat) => {
   ChatSession.lastReadAt = newChat.dateSent;
 });
 
-function joinRoom() {
-  connection
-    .invoke("JoinRoom", ChatSession.roomId)
-    .catch((err) => console.error(err));
-}
-
 function manageConnectionState(message, chatDisabled) {
   document.getElementById("send-chat").disabled = Boolean(chatDisabled);
 
   const p = document.createElement("p");
   p.innerHTML = message;
   document.getElementById("chat-messages").appendChild(p);
+}
+
+async function joinRoom() {
+  try {
+    await connection.invoke("JoinRoom", ChatSession.roomId);
+    console.log("Joined room.");
+
+    if (!ChatSession.lastReadAt) return;
+
+    manageConnectionState("<strong>Connection reestablished.</strong>", false);
+
+    await connection.invoke(
+      "GetChatsSince",
+      ChatSession.lastReadAt,
+      ChatSession.roomId
+    );
+  } catch (err) {
+    console.error(err.toString());
+  }
 }
 
 connection.onreconnecting((error) => {
@@ -42,14 +55,7 @@ connection.onreconnected((connectionId) => {
   console.assert(connection.state === signalR.HubConnectionState.Connected);
   console.log(`Connection reestablished with connectionId "${connectionId}".`);
 
-  manageConnectionState("<strong>Connection reestablished.</strong>", false);
   joinRoom();
-
-  if (ChatSession.lastReadAt) {
-    connection
-      .invoke("GetChatsSince", ChatSession.lastReadAt, ChatSession.roomId)
-      .catch((err) => console.error(err));
-  }
 });
 
 async function startConnection() {
@@ -57,6 +63,8 @@ async function startConnection() {
     await connection.start();
     console.assert(connection.state === signalR.HubConnectionState.Connected);
     console.log("Connected to chat server.");
+
+    joinRoom();
   } catch (err) {
     console.assert(
       connection.state === signalR.HubConnectionState.Disconnected
@@ -64,8 +72,6 @@ async function startConnection() {
     console.log(err);
     setTimeout(startConnection, 5000);
   }
-
-  joinRoom();
 }
 
 connection.onclose(async () => {
