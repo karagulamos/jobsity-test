@@ -36,16 +36,24 @@ public class ChatHub : Hub<IChatHub>
 
             if (!await _stockBot.TryEnqueueAsync(message, Context.ConnectionId))
             {
+                _logger.LogWarning($"StockBot command could not be enqueued for {userId} - {message}");
+
                 await Clients.Caller.ReceiveNewMessage(new UserChatDto(StockBotId, BotUnableToProcessRequest, DateTime.Now));
             }
 
             return;
         }
 
+        _logger.LogDebug($"Saving message from {userId} - {message}");
+
         var newChat = new UserChat(userId, message, roomId, DateTime.Now);
 
         await _chats.AddAsync(newChat);
 
+        _logger.LogDebug($"Publishing message from {userId} - {message}");
+
         await Clients.Group(roomId.ToString()).ReceiveNewMessage((UserChatDto)newChat);
+
+        _logger.LogInformation($"Message from {userId} - {message} published");
     }
 }
