@@ -13,19 +13,64 @@ connection.on("ReceiveNewMessage", (newChat) => {
   const p = document.createElement("p");
   p.innerText = chatMessage;
   document.getElementById("chat-messages").appendChild(p);
+
+  ChatSession.lastReadAt = newChat.dateSent;
+});
+
+function joinRoom() {
+  connection
+    .invoke("JoinRoom", ChatSession.roomId)
+    .catch((err) => console.error(err));
+}
+
+function manageConnectionState(message, chatDisabled) {
+  document.getElementById("send-chat").disabled = Boolean(chatDisabled);
+
+  const p = document.createElement("p");
+  p.innerHTML = message;
+  document.getElementById("chat-messages").appendChild(p);
+}
+
+connection.onreconnecting((error) => {
+  console.assert(connection.state === signalR.HubConnectionState.Reconnecting);
+  console.log(`Connection lost due to error "${error}". Reconnecting...`);
+
+  manageConnectionState("<em>Connection lost. Reconnecting...</em>", true);
+});
+
+connection.onreconnected((connectionId) => {
+  console.assert(connection.state === signalR.HubConnectionState.Connected);
+  console.log(`Connection reestablished with connectionId "${connectionId}".`);
+
+  manageConnectionState("<strong>Connection reestablished.</strong>", false);
+  joinRoom();
+
+  if (ChatSession.lastReadAt) {
+    connection
+      .invoke("GetChatsSince", ChatSession.lastReadAt, ChatSession.roomId)
+      .catch((err) => console.error(err));
+  }
 });
 
 async function startConnection() {
   try {
     await connection.start();
-    console.log("Connected to chat hub.");
-
-    await connection.invoke("JoinRoom", ChatSession.roomId);
+    console.assert(connection.state === signalR.HubConnectionState.Connected);
+    console.log("Connected to chat server.");
   } catch (err) {
+    console.assert(
+      connection.state === signalR.HubConnectionState.Disconnected
+    );
     console.log(err);
     setTimeout(startConnection, 5000);
   }
+
+  joinRoom();
 }
+
+connection.onclose(async () => {
+  await startConnection();
+});
 
 startConnection();
 

@@ -21,4 +21,9 @@ public class ChatRepository : IChatRepository
                          .OrderByDescending(u => u.DateCreated)
                          .Take(count)
                          .ToArrayAsync();
+
+    public Task<UserChat[]> GetSinceAsync(DateTime lastDate, Guid roomId)
+    => _context.UserChats.Where(chat => chat.RoomId == roomId && chat.DateCreated > lastDate)
+                         .OrderBy(u => u.DateCreated)
+                         .ToArrayAsync();
 }

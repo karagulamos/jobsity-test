@@ -16,4 +16,12 @@ public interface IChatRepository
     /// Adds a new chat to the repository.
     /// </summary>
     Task AddAsync(UserChat chat);
+
+    /// <summary>
+    /// Gets all chats since the specified date.
+    /// </summary>
+    /// <param name="lastDate"></param>
+    /// <param name="roomId"></param>
+    /// <returns></returns>
+    Task<UserChat[]> GetSinceAsync(DateTime lastDate, Guid roomId);
 }
