@@ -28,7 +28,16 @@ function manageConnectionState(message, chatDisabled) {
 async function joinRoom() {
   try {
     await connection.invoke("JoinRoom", ChatSession.roomId);
+
     console.log("Joined room.");
+  } catch (err) {
+    console.error(err.toString());
+  }
+}
+
+async function getChatsSince() {
+  try {
+    console.log("Loading chats since ", ChatSession.lastReadAt);
 
     if (!ChatSession.lastReadAt) return;
 
@@ -46,6 +55,7 @@ async function joinRoom() {
 
 connection.onreconnecting((error) => {
   console.assert(connection.state === signalR.HubConnectionState.Reconnecting);
+
   console.log(`Connection lost due to error "${error}". Reconnecting...`);
 
   manageConnectionState("<em>Connection lost. Reconnecting...</em>", true);
@@ -56,15 +66,18 @@ connection.onreconnected(async (connectionId) => {
   console.log(`Connection reestablished with connectionId "${connectionId}".`);
 
   await joinRoom();
+  await getChatsSince();
 });
 
 async function startConnection() {
   try {
     await connection.start();
+
     console.assert(connection.state === signalR.HubConnectionState.Connected);
     console.log("Connected to chat server.");
 
     await joinRoom();
+    await getChatsSince();
   } catch (err) {
     console.assert(
       connection.state === signalR.HubConnectionState.Disconnected
@@ -82,7 +95,9 @@ startConnection();
 
 const sendMessage = (roomId, userId) => {
   const message = document.getElementById("new-message").value;
+
   if (!message) return;
+
   connection
     .invoke("SendNewMessage", roomId, userId, message)
     .catch((err) => console.error(err));
