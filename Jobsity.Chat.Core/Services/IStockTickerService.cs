@@ -9,5 +9,5 @@ public interface IStockTickerService
     /// </summary>
     /// <param name="stockCode"></param>
     /// <returns></returns>
-    Task<StockQuote?> GetQuoteAsync(string stockCode);
+    Task<StockQuote> GetQuoteAsync(string stockCode);
 }

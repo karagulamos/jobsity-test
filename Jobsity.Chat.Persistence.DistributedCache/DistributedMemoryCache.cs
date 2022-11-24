@@ -10,14 +10,14 @@ public class DistributedMemoryCache : ICache
 
     public DistributedMemoryCache(IDistributedCache cache) => _cache = cache;
 
-    public async Task<T> GetAsync<T>(string key)
+    public async Task<T?> GetAsync<T>(string key)
     {
         var value = await _cache.GetStringAsync(key);
 
         if (string.IsNullOrEmpty(value))
-            return default!;
+            return default;
 
-        return JsonSerializer.Deserialize<T>(value)!;
+        return JsonSerializer.Deserialize<T>(value);
     }
 
     public async Task SetAsync<T>(string key, T value, TimeSpan? expiry = default)

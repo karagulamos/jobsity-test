@@ -19,7 +19,7 @@ public class StockTickerService : IStockTickerService
         _options = options.Value;
     }
 
-    public async Task<StockQuote?> GetQuoteAsync(string stockCode)
+    public async Task<StockQuote> GetQuoteAsync(string stockCode)
     {
         var stockQuote = await _cache.GetAsync<StockQuote>(stockCode);
 

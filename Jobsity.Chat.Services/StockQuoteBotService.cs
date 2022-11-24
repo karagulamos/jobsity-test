@@ -47,13 +47,14 @@ public class StockQuoteBotService : IStockQuoteBotService
     {
         try
         {
-            var stockQuote = await _stockTicker.GetQuoteAsync(request.StockCode);
+            _logger.LogDebug($"StockBot processing request: {request}");
 
-            if (stockQuote == default)
-                return;
+            var stockQuote = await _stockTicker.GetQuoteAsync(request.StockCode);
 
             var userChat = new UserChatDto(Constants.StockBotId, $"{stockQuote.Code.ToUpper()} quote is ${stockQuote.Price} per share.", DateTime.Now);
             await _hubContext.Clients.Client(request.CorrelationId).ReceiveNewMessage(userChat);
+
+            _logger.LogInformation($"StockBot processed request: {request}");
         }
         catch (Exception ex)
         {
