@@ -14,7 +14,7 @@ public class ChatContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserChat>(entity =>
+        _ = modelBuilder.Entity<UserChat>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.ChatRoom)
@@ -26,16 +26,27 @@ public class ChatContext : DbContext
             entity.Property(e => e.DateCreated).IsRequired();
         });
 
-        modelBuilder.Entity<ChatRoom>(entity =>
+        _ = modelBuilder.Entity<ChatRoom>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired();
         });
 
-        modelBuilder.Entity<ChatRoom>().HasData(
+        _ = modelBuilder.Entity<ChatRoom>().HasData(
             new ChatRoom(Guid.Parse("c0a80101-0000-0000-0000-000000000000"), "General"),
             new ChatRoom(Guid.Parse("c0a80101-0000-0000-0000-000000000001"), "Random"),
             new ChatRoom(Guid.Parse("c0a80101-0000-0000-0000-000000000002"), "Jobsity")
         );
     }
 }
+
+// dotnet add Jobsity.Chat.Web package Microsoft.EntityFrameworkCore.Design
+// dotnet ef database update -p Jobsity.Chat.Persistence.EntityFramework -s Jobsity.Chat.Web -c ChatContext
+
+// dotnet remove package Microsoft.VisualStudio.Web.CodeGeneration.Design
+// dotnet remove package Microsoft.EntityFrameworkCore.Design
+// dotnet remove package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+// dotnet remove package Microsoft.AspNetCore.Identity.UI
+// dotnet remove package Microsoft.EntityFrameworkCore.SqlServer
+// dotnet remove package Microsoft.EntityFrameworkCore.Tools
+
