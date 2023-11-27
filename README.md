@@ -1,7 +1,7 @@
 # Jobsity Test
 
 - [Tasks](/docs/TASKS.md)
-- [Preview](/docs/Preview.md)
+- [Preview](/docs/PREVIEW.md)
 - [High-Level Architecture](/docs/HLA.md)
 
 ## Setup
