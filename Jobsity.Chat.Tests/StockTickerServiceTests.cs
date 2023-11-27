@@ -31,7 +31,6 @@ public class StockTickerServiceTests
         });
     }
 
-
     [TestMethod]
     public async Task GetQuoteAsync_ShouldReturnQuote_WhenSymbolValid()
     {
@@ -63,10 +62,14 @@ public class StockTickerServiceTests
     {
         // Arrange
         var symbol = "MSFT.US";
+        var stockQuote = new StockQuote(symbol, 377.43m);
 
         _mockCache
             .Setup(x => x.GetAsync<StockQuote>(symbol))
-            .ReturnsAsync(new StockQuote(symbol, 377.43m));
+            .ReturnsAsync(stockQuote)
+            .Verifiable();
+
+        _mockCache.Verify(x => x.SetAsync(symbol, It.IsAny<StockQuote>(), It.IsAny<TimeSpan?>()), Times.Never);
 
         var sut = new StockTickerService(_mockedHttpClient, _mockCache.Object, _mockOptions.Object);
 
@@ -74,7 +77,7 @@ public class StockTickerServiceTests
         var result = await sut.GetQuoteAsync(symbol);
 
         // Assert
-        Assert.AreEqual(result, new StockQuote(symbol, 377.43m));
+        Assert.AreEqual(result, stockQuote);
     }
 
     [TestMethod]
