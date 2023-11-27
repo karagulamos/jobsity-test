@@ -30,3 +30,4 @@ $dotnet watch run --project Jobsity.Chat.Web
 | `SignalR`             | For realtime comm between clients |
 | `EF Core`             | Persistence and data retrieval    |
 | `EasyNetQ`            | For message queueing              |
+| `Moq`                 | For mocking in tests              |
