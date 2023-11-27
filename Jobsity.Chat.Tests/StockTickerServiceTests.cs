@@ -55,9 +55,7 @@ public class StockTickerServiceTests
         var result = await sut.GetQuoteAsync(symbol);
 
         // Assert
-        Assert.IsNotNull(result);
-        Assert.AreEqual(symbol, result.Code);
-        Assert.IsTrue(result.Price > 0);
+        Assert.AreEqual(result, new StockQuote(symbol, 377.43m));
     }
 
     [TestMethod]
@@ -76,9 +74,7 @@ public class StockTickerServiceTests
         var result = await sut.GetQuoteAsync(symbol);
 
         // Assert
-        Assert.IsNotNull(result);
-        Assert.AreEqual(symbol, result.Code);
-        Assert.AreEqual(377.43m, result.Price);
+        Assert.AreEqual(result, new StockQuote(symbol, 377.43m));
     }
 
     [TestMethod]
