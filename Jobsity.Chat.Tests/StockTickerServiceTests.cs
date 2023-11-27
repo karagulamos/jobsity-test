@@ -114,9 +114,7 @@ public class StockTickerServiceTests
             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(
-                    "Symbol,Date,Time,Open,High,Low,Close,Volume\r\n"
-                )
+                Content = new StringContent("Symbol,Date,Time,Open,High,Low,Close,Volume\r\n")
             });
 
         var sut = new StockTickerService(_mockedHttpClient, _mockCache.Object, _mockOptions.Object);
