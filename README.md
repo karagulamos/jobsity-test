@@ -2,6 +2,7 @@
 
 - [Tasks](./TASKS.md)
 - [Preview](/PREVIEW.md)
+- [High-Level Architecture](/HLA.md)
 
 ## Setup
 
