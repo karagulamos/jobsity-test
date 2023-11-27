@@ -1,3 +1,3 @@
 # High-Level Architecture
 
-![High-Level Architecture](https://github.com/karagulamos/jobsity-test/assets/16248072/9e6cc00b-7ef8-4098-a0a0-6a16e464d038)
+![High-Level Architecture](https://github.com/karagulamos/jobsity-test/assets/16248072/12f1d0a1-9ef2-4889-9d5c-b7737bb62749)
