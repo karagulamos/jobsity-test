@@ -1,4 +1,4 @@
-# Jobsity Test
+# Jobsity Challenge
 
 - [Tasks](/docs/TASKS.md)
 - [Preview](/docs/PREVIEW.md)
