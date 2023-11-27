@@ -4,6 +4,13 @@
 - [Preview](/docs/PREVIEW.md)
 - [High-Level Architecture](/docs/HLA.md)
 
+## Description
+
+The goal of this exercise is to create a simple browser-based chat application using .NET.
+
+This application should allow several users to talk in a chatroom and also to get stock quotes
+from an API using a specific command.
+
 ## Setup
 
 Requires Docker, RabbitMQ, .NET 7 or higher.
