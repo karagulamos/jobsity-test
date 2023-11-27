@@ -14,7 +14,7 @@ using the following format: “APPL.US quote is $93.42 per share”. The post ow
 the bot.
 - [x] Have the chat messages ordered by their timestamps and show only the last 50
 messages.
-- [ ] Unit test the functionality you prefer.
+- [x] Unit test the functionality you prefer.
 
 ## Bonus (Optional)
 
