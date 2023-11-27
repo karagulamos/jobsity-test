@@ -1,4 +1,4 @@
-# Jobsity Test - Tasks
+# Jobsity Challenge - Tasks
 
 ## Mandatory Features
 
