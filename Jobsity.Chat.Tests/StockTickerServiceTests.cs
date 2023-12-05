@@ -55,6 +55,7 @@ public class StockTickerServiceTests
 
         // Assert
         Assert.AreEqual(result, new StockQuote(symbol, 377.43m));
+        _mockCache.Verify(x => x.SetAsync(symbol, It.IsAny<StockQuote>(), It.IsAny<TimeSpan>()), Times.Once);
     }
 
     [TestMethod]
@@ -69,8 +70,6 @@ public class StockTickerServiceTests
             .ReturnsAsync(stockQuote)
             .Verifiable();
 
-        _mockCache.Verify(x => x.SetAsync(symbol, It.IsAny<StockQuote>(), It.IsAny<TimeSpan?>()), Times.Never);
-
         var sut = new StockTickerService(_mockedHttpClient, _mockCache.Object, _mockOptions.Object);
 
         // Act
@@ -78,6 +77,7 @@ public class StockTickerServiceTests
 
         // Assert
         Assert.AreEqual(result, stockQuote);
+        _mockCache.Verify(x => x.SetAsync(symbol, It.IsAny<StockQuote>(), It.IsAny<TimeSpan>()), Times.Never);
     }
 
     [TestMethod]
